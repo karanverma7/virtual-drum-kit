@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drum Kit</title>
+    <style>
+        body {
+            background-image: url(bg-image.jpg);
+            background-position: top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0px;   
+            width: 100%;
+            height: 100vh;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        #bg {
+            background-color: rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: 100vh;
+            backdrop-filter: blur(3px);
+            position: fixed;
+            margin: 0px;
+        }
+        h1, h3 {
+            color: rgb(238, 238, 238);
+            text-align: center;
+            padding: 10px;
+        }
+        h3 {
+            margin-top: -60px;
+            font-weight: 100;
+        }
+        #drumkit {
+            display: flex;
+            width: 70%;
+            justify-content: space-between;
+            margin: 70px auto;
+            flex-wrap: wrap;
+        }
+        .part {
+            height: 70px;
+            width: 90px;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 25px;
+            text-align: center;
+            font-weight: 800;
+            padding-top: 10px;
+            font-size: 24px;
+            border: 3px solid black;
+            transition: all 0.05s;
+        }
+        .part .effect {
+            color: rgb(255, 155, 67);
+            font-size: 18px;
+            filter: drop-shadow(2px 2px 1px black);
+        }
+        .playing {
+            transform: scale(1.05);
+            border: 4px solid rgb(255, 164, 85);
+            filter: drop-shadow(4px 4px 3px rgb(0, 0, 0));
+        }
+        #credit {
+        color: white;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        padding: 7px 0px;
+        font-weight: 550;
+        text-align: center;
+        }
+        @media only screen and (max-width:600px){
+            .part {
+            height: 50px;
+            width: 62px;
+            margin: 7px;
+            font-size: 18px;
+            }
+            .part .effect {
+            font-size: 13px;
+            filter: drop-shadow(1px 1px 1px black);
+            }
+            #credit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="bg">
+        <h1>The Virtual Drum Kit</h1>
+        <div id="drumkit">
+            <div data-key="65" class="part">A <br><span class="effect">Boom</span></div>
+            <div data-key="83" class="part">S <br><span class="effect">HitHat</span></div>
+            <div data-key="68" class="part">D <br><span class="effect">Kick</span></div>
+            <div data-key="70" class="part">F <br><span class="effect">OpenHat</span></div>
+            <div data-key="71" class="part">G <br><span class="effect">Ride</span></div>
+            <div data-key="72" class="part">H <br><span class="effect">Snare</span></div>
+            <div data-key="74" class="part">J <br><span class="effect">Tink</span></div>
+            <div data-key="75" class="part">K <br><span class="effect">Tom</span></div>
+        </div>
+        <br>
+        <h3>( Press keys Play )</h3>
+    </div>
+
+    <audio src="sounds/boom.wav" data-key="65"></audio>
+    <audio src="sounds/hihat.wav" data-key="83"></audio>
+    <audio src="sounds/kick.wav" data-key="68"></audio>
+    <audio src="sounds/openhat.wav" data-key="70"></audio>
+    <audio src="sounds/ride.wav" data-key="71"></audio>
+    <audio src="sounds/snare.wav" data-key="72"></audio>
+    <audio src="sounds/tink.wav" data-key="74"></audio>
+    <audio src="sounds/tom.wav" data-key="75"></audio>
+    <div id="credit"> 
+        <svg width="20" height="20" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M232.819 98.333L270.819 47.5H512V0H0V98.333H232.819ZM171.833 34.833H201.833V64.833H171.833V34.833ZM110.292 34.833H140.292V64.833H110.292V34.833ZM48.75 34.833H78.75V64.833H48.75V34.833Z" fill="#F7F7F7"/>
+            <path d="M285.848 77.5L247.848 128.333H0V512H512V77.5H285.848ZM178.337 381.208L157.124 402.421L72.87 318.167L157.124 233.913L178.337 255.126L115.296 318.167L178.337 381.208ZM218.643 434.901L191.358 422.431L292.358 201.431L319.643 213.901L218.643 434.901ZM354.876 402.42L333.663 381.207L396.704 318.166L333.663 255.125L354.876 233.912L439.13 318.166L354.876 402.42Z" fill="#F7F7F7"/>
+        </svg> &nbsp;
+        Developed by Karan Verma
+    </div>
+</body>
+<script>
+    window.addEventListener('keydown', (e) => {
+        var audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+        var key = document.querySelector(`.part[data-key="${e.keyCode}"]`)
+        key.classList.add('playing')
+        audio.currentTime = 0;
+        audio.play()
+    })
+
+    function stop(e) {
+        if(e.propertyName !== 'transform') return;
+        this.classList.remove('playing')
+    }
+    
+    var keys = document.querySelectorAll('.part')
+    keys.forEach( key => key.addEventListener('transitionend', stop))
+</script>
+</html>
